@@ -1,0 +1,37 @@
+# AWS EC2 Docker Deployment Commands
+
+ssh -i yourkey.pem ec2-user@EC2_PUBLIC_IP
+
+sudo yum update -y
+
+sudo yum install docker -y
+
+sudo systemctl start docker
+
+sudo systemctl enable docker
+
+sudo usermod -aG docker ec2-user
+
+exit
+
+ssh -i yourkey.pem ec2-user@EC2_PUBLIC_IP
+
+sudo yum install git -y
+
+git clone https://github.com/yourusername/docker-ec2-deployment.git
+
+cd docker-ec2-deployment
+
+docker build -t node_app .
+
+docker network create app-network
+
+docker run -d --name node_app --network app-network -p 3000:3000 node_app
+
+docker run -d --name nginx_server --network app-network -p 80:80 -v ~/docker-ec2-deployment/nginx/default.conf:/etc/nginx/conf.d/default.conf nginx
+
+docker ps
+
+docker logs node_app
+
+docker logs nginx_server
